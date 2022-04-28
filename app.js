@@ -18,6 +18,7 @@ app.set('view engine', 'ejs');
 
 // middleware & static files
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true })); //Middleware used for accepting form data
 app.use(morgan('dev'));
 
 app.use((req, res, next) => {
@@ -40,6 +41,19 @@ app.get('/blogs', (req, res) => {
   Blog.find().sort({ createdAt: -1 }) //Displays the blogs in descending order based on the time stamp the blogs were created
   .then((result) => {
     res.render('index', { title: 'All Blogs', blogs: result })
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+})
+
+//POST event handler that adds a new blog to the index html page
+app.post(('/blogs'), (req, res) => {
+  const blog = new Blog(res.body)
+  
+  blog.save()
+  .then((result) => {
+    res.redirect('/blogs');
   })
   .catch((err) => {
     console.log(err);
