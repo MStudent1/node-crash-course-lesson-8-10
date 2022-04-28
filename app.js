@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Blog = require('./models/blog'); //Inserts blog.js which contains the schema and model
+const { render } = require('ejs');
 
 // express app
 const app = express();
@@ -58,6 +59,19 @@ app.post(('/blogs'), (req, res) => {
   .catch((err) => {
     console.log(err);
   })
+})
+
+//Uses id to access blog via an id
+app.get('/blogs/_:id', (req, res) => {
+  const id = req.params.id;
+
+  Blog.findById(id)
+    .then(result => {
+      render('details', { blog: result, title: 'Blog Details' });
+    })
+    .catch(err => {
+      console.log(err);
+    })
 })
 
 app.get('/blogs/create', (req, res) => {
