@@ -20,62 +20,31 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(morgan('dev'));
 
-//mongoose and mongo sandbox routes; creates new document object of collection blogs
-app.get('/add-blog', (req, res) => {
-  const blog = new Blog({  //Creates a new blog
-      title: 'Blog',
-      snippet: 'Really cool blog',
-      body: 'Interesting blog'
-  });
-  blog.save() //Saves document to blogs collection on MongoDB Atlas
-    .then((result) => { //Sends callback function once the promise resolves from save() method
-        res.send(result) //Sends document object info to MongoDB Atlas
-    })
-    .catch((err) => { //Catches error
-        console.log(err);
-    })
-});
-
-//Retrieves all document objects from the collection called blogs
-app.get('/all-blogs', (req, res) => {
-  Blog.find() //Uses the model's name and finds all of the document objects stored in collection; asynchronous
-    .then((result) => {
-      res.send(result);
-    })
-
-    .catch((err) => {
-      console.log(err);
-    });
-})
-
-//Finds a single document object of a collection using the unique id assigned to it automatically
-app.get('/single-blog', (req, res) => {
-  Blog.findById('626ae3e4f007f91b65640dc8')  //Finds a document object by the id (primary key); asynchronous
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-})
-
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
 });
 
 app.get('/', (req, res) => {
-  const blogs = [
-    {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-  ];
-  res.render('index', { title: 'Home', blogs });
+  res.redirect('/blogs');
 });
 
 app.get('/about', (req, res) => {
   res.render('about', { title: 'About' });
 });
+
+//Passes the document objects of the collection blogs to the index html page
+//The html page contains
+//Blog routes
+app.get('/blogs', (req, res) => {
+  Blog.find().sort({ createdAt: -1 }) //Displays the blogs in descending order based on the time stamp the blogs were created
+  .then((result) => {
+    res.render('index', { title: 'All Blogs', blogs: result })
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+})
 
 app.get('/blogs/create', (req, res) => {
   res.render('create', { title: 'Create a new blog' });
