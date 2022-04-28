@@ -20,4 +20,4 @@ const blogSchema = new Schema({
 //Model
 const Blog = mongoose.model('Blog', blogSchema);
 //Exports the model elsewhere in the project; model can be used to save new blog documents
-model.exports = Blog;
+module.exports = Blog;
