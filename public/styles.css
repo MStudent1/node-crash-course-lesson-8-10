@@ -20,9 +20,9 @@
       margin-bottom: 60px;
       padding-bottom: 10px;
       border: 1px solid hsla(0,0%,100%,.5);
-      border-bottom: 1px solid #00bdbd;
+      border-bottom: 1px solid rgb(179, 15, 48);
       text-transform: uppercase; 
-      background-color: #00ffff;
+      background-color: crimson;
       border-radius: 25px 50px 30px;
       border-width: 15px;
       padding-left: 10px;
@@ -39,9 +39,10 @@
     }
     nav h1{
       font-size: 3em;
+      color: rgb(0, 0, 0);
     }
     nav p, nav a{
-      color: #777;
+      color: rgb(0, 0, 0);
       font-weight: 300;
     }
     footer{
@@ -60,9 +61,16 @@
       margin-left: 20px;
     }
 
-    /* index styles */
+    .blogs a{
+      display: block;
+      margin: 40px 0;
+      padding-left: 30px;
+      border-left: 6px solid crimson;
+    }
 
-    /* details styles */
+    .blogs a:hover h3{
+        color: crimson;
+    }
 
     /* create styles */
     .create-blog form{
