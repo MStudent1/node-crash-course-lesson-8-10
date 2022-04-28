@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const Blog = require('./models/blog'); //Inserts blog.js which contains the schema and model
 
 // express app
 const app = express();
@@ -17,13 +18,24 @@ app.set('view engine', 'ejs');
 
 // middleware & static files
 app.use(express.static('public'));
-
 app.use(morgan('dev'));
 
-app.use((req, res, next) => {
-  console.log('in the next middleware');
-  next();
+//mongoose and mongo sandbox routes
+app.get('/add-blog', (req, res) => {
+  const blog = new Blog({  //Creates a new blog
+      title: 'new Blog',
+      snippet: 'about my new blog',
+      body: 'more about my new blog'
+  });
+  blog.save() //Saves document to blogs collection on MongoDB Atlas
+    .then((result) => { //Sends callback function once the promise resolves from save() method
+        res.send(result) //Sends document object info to MongoDB Atlas
+    })
+    .catch((err) => { //Catches error
+        console.log(err);
+    })
 });
+
 
 app.use((req, res, next) => {
   res.locals.path = req.path;
