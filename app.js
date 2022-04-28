@@ -20,12 +20,12 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(morgan('dev'));
 
-//mongoose and mongo sandbox routes
+//mongoose and mongo sandbox routes; creates new document object of collection blogs
 app.get('/add-blog', (req, res) => {
   const blog = new Blog({  //Creates a new blog
-      title: 'new Blog',
-      snippet: 'about my new blog',
-      body: 'more about my new blog'
+      title: 'Blog',
+      snippet: 'Really cool blog',
+      body: 'Interesting blog'
   });
   blog.save() //Saves document to blogs collection on MongoDB Atlas
     .then((result) => { //Sends callback function once the promise resolves from save() method
@@ -36,6 +36,28 @@ app.get('/add-blog', (req, res) => {
     })
 });
 
+//Retrieves all document objects from the collection called blogs
+app.get('/all-blogs', (req, res) => {
+  Blog.find() //Uses the model's name and finds all of the document objects stored in collection; asynchronous
+    .then((result) => {
+      res.send(result);
+    })
+
+    .catch((err) => {
+      console.log(err);
+    });
+})
+
+//Finds a single document object of a collection using the unique id assigned to it automatically
+app.get('/single-blog', (req, res) => {
+  Blog.findById('626ae3e4f007f91b65640dc8')  //Finds a document object by the id (primary key); asynchronous
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+})
 
 app.use((req, res, next) => {
   res.locals.path = req.path;
