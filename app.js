@@ -62,12 +62,12 @@ app.post(('/blogs'), (req, res) => {
 })
 
 //Uses id to access blog via an id
-app.get('/blogs/_:id', (req, res) => {
+app.get('/blogs/:id', (req, res) => {
   const id = req.params.id;
 
   Blog.findById(id)
     .then(result => {
-      render('details', { blog: result, title: 'Blog Details' });
+      res.render('details', { blog: result, title: 'Blog Details' });
     })
     .catch(err => {
       console.log(err);
